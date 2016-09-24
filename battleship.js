@@ -44,6 +44,7 @@ var model = {
 		view.displayMessage("You missed.  Better luck next time.");
 		return false;
 	},
+
 	isSunk: function(ship) {
 		for (var i = 0; i <this.shipLength; i++) {
 			if (ship.hits[i] !== "hit") {
@@ -52,17 +53,10 @@ var model = {
 		}
 		return true;
 	},
+
 	generateShipLocations: function() {
 		var locations;
-		//var generatedShips = 0;
-		//var currentShip = 0;
-		//while (generatedShips < this.numShips) {
-			//locations = this.generateShip();
-			//if (this.collisions(locations) == false) {
-				//this.ships[currentShip].locations = locations;
-				//currentShip++;
-				//generatedShips++;
-			//};
+
 		for (var i = 0; i < this.numShips; i++) {
 			do {
 		 		locations = this.generateShip();
@@ -111,6 +105,7 @@ var model = {
 var controller = {
 	guesses: 0,
 	guessArray: [],
+	guessLocationArray: [],
 	processGuess: function(guess) {
 		var location = parseGuess(guess);
 		if (location) {
@@ -145,6 +140,7 @@ parseGuess = function(guess) {
 	} else if (row < 0 || row >= model.boardSize || column < 0 || column >= model.boardSize) {
 		alert("Oops, that's off the board.  Try again.");
 	} else {
+		controller.guessLocationArray.push(row + column);
 		return row + column;
 	}
 
@@ -153,6 +149,12 @@ parseGuess = function(guess) {
 };
 
 function init() {
+	view.displayMessage("Welcome to the battleship game. Enter your firing coordinates below.");
+	var allCells = document.getElementsByTagName("td");
+	for (var i = 0; i < allCells.length; i++) {
+				allCells[i].setAttribute("class", "clear");
+			}
+
 	var fireButton = document.getElementById("fireButton");
 	fireButton.onclick = handleFireButton;
 	var guessInput = document.getElementById("guessInput");
@@ -176,11 +178,15 @@ function handleKeyPress(e) {
 };
 
 function endGame() {
-	controller.guesses = 0;
-	for (var i = 0; i < controller.guessArray.length; i++) {
-		view.displayClear(controller.guessArray[i]);
+
+	for (var i = 0; i < controller.guessLocationArray.length; i++) {
+		console.log(controller.guessLocationArray[i]);
+		view.displayClear(controller.guessLocationArray[i]);
 		}
+
+	controller.guesses = 0;
 	controller.guessArray = [];
+	controller.guessLocationArray = [];
 	model.shipsSunk = 0;
 	model.ships = [{ locations: [0, 0, 0], hits: ["","",""]},
 			{ locations: [0, 0, 0], hits: ["","",""]},
