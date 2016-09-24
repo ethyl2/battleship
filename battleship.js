@@ -153,6 +153,7 @@ function init() {
 	var allCells = document.getElementsByTagName("td");
 	for (var i = 0; i < allCells.length; i++) {
 				allCells[i].setAttribute("class", "clear");
+				allCells[i].className += " flex-item";
 			}
 
 	var fireButton = document.getElementById("fireButton");
